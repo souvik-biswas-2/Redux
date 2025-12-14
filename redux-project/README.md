@@ -1,16 +1,64 @@
-# React + Vite
+# Redux Learning Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple React application built with Vite to learn and practice Redux and Redux Toolkit.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Counter functionality using Redux state management
+- Redux Toolkit for simplified Redux setup
+- React components connected to Redux store
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js (version 16 or higher)
+- npm or yarn
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd redux-project
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## Project Structure
+
+```
+src/
+├── app/
+│   └── store.js          # Redux store configuration
+├── features/
+│   └── counterSlice.js   # Counter slice with reducers
+├── App.jsx               # Main app component
+├── main.jsx              # App entry point with Provider
+└── index.css             # Styles
+```
+
+## Redux Concepts Covered
+
+- Store: Central state container
+- Slices: Modular state management
+- Actions: Plain objects describing changes
+- Reducers: Pure functions updating state
+- Selectors: Functions to access state
+- Dispatch: Method to trigger actions
+
+## Learn More
+
+- [Redux Documentation](https://redux.js.org/)
+- [Redux Toolkit Documentation](https://redux-toolkit.js.org/)
+- [React Redux Documentation](https://react-redux.js.org/)
