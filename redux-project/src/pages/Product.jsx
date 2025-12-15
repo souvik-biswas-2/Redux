@@ -1,7 +1,11 @@
 import React from 'react'
 import { ShoppingCart, Star } from 'lucide-react'
+import { useDispatch } from 'react-redux'
+import Cart from './Cart';
 
 const Product = () => {
+
+    const dispatch = useDispatch();
   const products = [
     {
       id: 1,
@@ -102,7 +106,7 @@ const Product = () => {
                       ${product.price}
                     </div>
                     <button className="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white p-3 rounded-lg transition-colors">
-                      <ShoppingCart size={20} />
+                      <ShoppingCart onClick={ () => {dispatch(Cart)} } size={20} />
                     </button>
                   </div>
                 </div>
