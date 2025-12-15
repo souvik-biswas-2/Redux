@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react'
 
 const Cart = () => {
+    const selector = (state) => state.cart;
+    console.log(selector);
+    
   const [cartItems, setCartItems] = useState([
     {
       id: 1,

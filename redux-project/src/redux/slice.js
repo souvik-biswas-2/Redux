@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    value: 0,
+    items: [],
 };
 
 const addToCart = createSlice({
@@ -9,7 +9,7 @@ const addToCart = createSlice({
     initialState,
     reducers: {
         addItem: (state) => { //action
-            state.value += 1;
+            
         }
     }
 });
