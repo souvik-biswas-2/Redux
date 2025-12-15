@@ -1,42 +1,31 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeItem } from '../redux/slice'
 
 const Cart = () => {
-    const selector = (state) => state.cart;
-    console.log(selector);
-    
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'React Starter Kit',
-      price: 29.99,
-      quantity: 1,
-      image: 'bg-blue-500'
-    },
-    {
-      id: 2,
-      name: 'Redux Manager Pro',
-      price: 39.99,
-      quantity: 2,
-      image: 'bg-purple-500'
-    }
-  ])
+  const dispatch = useDispatch();
+  const cartSelector = useSelector((state) => state.cart);
+  const cartItems = cartSelector.items;
+  
+  const [quantities, setQuantities] = useState({});
 
   const handleQuantityChange = (id, newQuantity) => {
-    if (newQuantity <= 0) return
-    setCartItems(cartItems.map(item =>
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    ))
+    if (newQuantity <= 0) return;
+    setQuantities(prev => ({
+      ...prev,
+      [id]: newQuantity
+    }));
   }
 
   const handleRemoveItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id))
+    dispatch(removeItem(id));
   }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  const tax = subtotal * 0.1
-  const total = subtotal + tax
+  const getItemQuantity = (id) => {
+    return quantities[id] || 1;
+  }
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
@@ -83,23 +72,23 @@ const Cart = () => {
                           <div className="flex items-center space-x-4">
                             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg">
                               <button
-                                onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                                onClick={() => handleQuantityChange(item.id, getItemQuantity(item.id) - 1)}
                                 className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                               >
                                 <Minus size={18} />
                               </button>
                               <span className="px-4 py-2 text-gray-900 dark:text-white font-medium">
-                                {item.quantity}
+                                {getItemQuantity(item.id)}
                               </span>
                               <button
-                                onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                                onClick={() => handleQuantityChange(item.id, getItemQuantity(item.id) + 1)}
                                 className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                               >
                                 <Plus size={18} />
                               </button>
                             </div>
                             <span className="text-gray-600 dark:text-gray-400">
-                              Subtotal: ${(item.price * item.quantity).toFixed(2)}
+                              Subtotal: ${(item.price * getItemQuantity(item.id)).toFixed(2)}
                             </span>
                           </div>
                         </div>
@@ -135,27 +124,37 @@ const Cart = () => {
                     Order Summary
                   </h3>
 
-                  <div className="space-y-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex justify-between text-gray-700 dark:text-gray-300">
-                      <span>Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-gray-700 dark:text-gray-300">
-                      <span>Tax (10%)</span>
-                      <span>${tax.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-gray-700 dark:text-gray-300">
-                      <span>Shipping</span>
-                      <span className="text-green-600 dark:text-green-400">Free</span>
-                    </div>
-                  </div>
+                  {(() => {
+                    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * getItemQuantity(item.id)), 0);
+                    const tax = subtotal * 0.1;
+                    const total = subtotal + tax;
+                    
+                    return (
+                      <>
+                        <div className="space-y-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                          <div className="flex justify-between text-gray-700 dark:text-gray-300">
+                            <span>Subtotal</span>
+                            <span>${subtotal.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between text-gray-700 dark:text-gray-300">
+                            <span>Tax (10%)</span>
+                            <span>${tax.toFixed(2)}</span>
+                          </div>
+                          <div className="flex justify-between text-gray-700 dark:text-gray-300">
+                            <span>Shipping</span>
+                            <span className="text-green-600 dark:text-green-400">Free</span>
+                          </div>
+                        </div>
 
-                  <div className="flex justify-between mb-6">
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">Total</span>
-                    <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                      ${total.toFixed(2)}
-                    </span>
-                  </div>
+                        <div className="flex justify-between mb-6">
+                          <span className="text-lg font-bold text-gray-900 dark:text-white">Total</span>
+                          <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                            ${total.toFixed(2)}
+                          </span>
+                        </div>
+                      </>
+                    );
+                  })()}
 
                   <button className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white py-3 rounded-lg font-semibold transition-colors mb-3">
                     Proceed to Checkout

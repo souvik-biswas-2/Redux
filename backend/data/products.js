@@ -26,7 +26,7 @@ const products = [
     name: 'Tailwind CSS Theme',
     price: 24.99,
     rating: 4.7,
-    image: 'bg-cyan-500',
+    image: 'bg-teal-500',
     description: 'Beautiful pre-built Tailwind themes',
     category: 'styling',
     inStock: true,

@@ -1,39 +1,28 @@
-import React, { useState, useEffect } from 'react'
 import { ShoppingCart, Star, Loader } from 'lucide-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addItem } from '../redux/slice';
+import { useEffect } from 'react';
+import { fetchProducts } from '../redux/ProductSlice';
 
 const Product = () => {
   const dispatch = useDispatch();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    dispatch(fetchProducts());
+  },[dispatch]);
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch('http://localhost:5000/api/products');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
+  const products =  useSelector((state) => state.products.data);
+  // console.log(products);
+  
+  const status =  useSelector((state) => state.products.status);
+  const error =  useSelector((state) => state.products.error);
 
-      const data = await response.json();
-      setProducts(data.data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching products:', err);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const cartSelector = useSelector ((state) => state.cart);
+    // console.log(cartSelector.items.length);
+    
+    // const itemCount = cartSelector.items.length;
 
-  if (loading) {
+  if (status === "loading") {
     return (
       <main className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
         <section className="bg-linear-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 text-white py-12 px-4">
@@ -49,7 +38,7 @@ const Product = () => {
     );
   }
 
-  if (error) {
+  if (status === "error" || status === "failed") {
     return (
       <main className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
         <section className="bg-linear-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700 text-white py-12 px-4">
@@ -70,7 +59,7 @@ const Product = () => {
               Make sure the backend server is running on http://localhost:5000
             </p>
             <button
-              onClick={fetchProducts}
+              onClick={() => dispatch(fetchProducts())}
               className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition-colors"
             >
               Retry
@@ -129,9 +118,18 @@ const Product = () => {
                     <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
                       ${product.price}
                     </div>
-                    <button className="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white p-3 rounded-lg transition-colors">
-                      <ShoppingCart onClick={ () => {dispatch(addItem(product))} } size={20} />
-                    </button>
+                    {cartSelector.items.find(item => item.id === product.id) ? (
+                      <div className="flex items-center space-x-2 bg-green-100 dark:bg-green-900 px-4 py-2 rounded-lg">
+                        <span className="text-green-600 dark:text-green-400 font-semibold">✓ Added</span>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={() => dispatch(addItem(product))} 
+                        className="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white p-3 rounded-lg transition-colors"
+                      >
+                        <ShoppingCart size={20} />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -148,7 +146,7 @@ const Product = () => {
             All products come with comprehensive documentation, support, and regular updates.
           </p>
           <p className="text-sm text-gray-500">
-            Use the Redux cart feature (coming soon) to manage your selections!
+            Redux Project &copy; 2025. All rights reserved.
           </p>
         </div>
       </section>

@@ -2,8 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Moon, Sun } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
+import { useSelector } from 'react-redux'
 
 const Header = () => {
+  const cartSelector = useSelector ((state) => state.cart);
+  // console.log(cartSelector.items.length);
+  
+  const itemCount = cartSelector.items.length;
+
   const { isDark, toggleTheme } = useTheme()
 
   return (
@@ -67,7 +73,7 @@ const Header = () => {
                 className="text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors"
               />
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                0
+                {itemCount}
               </span>
             </Link>
           </div>
