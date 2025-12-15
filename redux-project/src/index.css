@@ -9,9 +9,14 @@
   box-sizing: border-box;
 }
 
-html, body {
+html, body, #root {
   height: 100%;
   width: 100%;
-  background-color: var(--bg-primary-color);
-  color: var(--text-primary-color);
+}
+
+/* Tailwind dark mode configuration */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
 }
